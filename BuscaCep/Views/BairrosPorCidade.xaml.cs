@@ -1,3 +1,4 @@
+using Busca_Cep.Services;
 using BuscaCep.Models;
 using System.Collections.ObjectModel;
 
@@ -23,7 +24,7 @@ public partial class BairrosPorCidade : ContentPage
 
             string? estado_selecionado = disparador.SelectedItem as string;
 
-            List<Cidade> arr_cidades = await DataService.GetCidadesByEstado(estado_selecionado);
+            List<Cidade> arr_cidades = await DataServices.GetCidadesByEstado(estado_selecionado);
 
             lista_cidades.Clear();
             arr_cidades.ForEach(i => lista_cidades.Add(i));
@@ -35,8 +36,23 @@ public partial class BairrosPorCidade : ContentPage
         }
     }
 
-    private void pck_cidade_SelectedIndexChanged(object sender, EventArgs e)
+    private async void pck_cidade_SelectedIndexChanged(object sender, EventArgs e)
     {
+        try
+        {
+            Picker disparador = sender as Picker;
 
+            Cidade cidade_selecionado = disparador.SelectedItem as Cidade;
+
+            List<Bairro> arr_bairros = await DataServices.GetBairrosAsyncByIdCidaded(cidade_selecionado.id_cidade);
+            
+            lista_bairros.Clear();
+
+            arr_bairros.ForEach(i => lista_bairros.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "OK");
+        }
     }
 }
