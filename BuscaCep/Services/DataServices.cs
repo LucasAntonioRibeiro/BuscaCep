@@ -12,8 +12,11 @@ namespace Busca_Cep.Services
 
             using (HttpClient client = new HttpClient())
             {
-                string url = "Http://cep.metoda.com.br/endereco/by-cep?cep=" + cep;
+                string url = "https://cep.metoda.com.br/endereco/by-cep?cep=" + cep;
                 HttpResponseMessage response = await client.GetAsync(url);
+
+                HttpResponseMessage.response = await client.GetAsync
+                    ("http://localhost:8000endereco/by-cep?cep=" + cep);
                 if (response.IsSuccessStatusCode)
                 {
                     string json = response.Content.ReadAsStringAsync().Result;
